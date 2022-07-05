@@ -1,6 +1,6 @@
 //==================================================//
 //       Credits: John Saber & Abdullah Allam       //
-//        	       MinCut_Placement	      			//
+//        	       MinCut_Placement	      	    //
 //==================================================//
 
 #ifndef MIN_CUT_H
@@ -24,19 +24,19 @@ struct gate {
 	string input1;
 	string input2;
 	string output;
-	bool fixed=0;									//Indicates whether it is fixed or not
+	bool fixed=0;				//Indicates whether it is fixed or not
 };
 
-//==================================================================================//
+//======================================================================================//
 //	2D map (like 2D associative array with string indices) for connectivity matrix	//
-//==================================================================================//
+//======================================================================================//
 map<string,map<string,int>> connectivity;           
 
 
 
 
 //==============================================================//
-//			Function to count pins and gates in a file			//
+//Function to count pins and gates in a file			//
 //==============================================================//
 void count_nodes (ifstream &file , int count_arr[]) {
 	int p_n = 0;
@@ -68,7 +68,7 @@ void count_nodes (ifstream &file , int count_arr[]) {
 
 
 //==========================================================================================//
-//		Functions to erase unneeded string characters, find char, find its position			//
+//Functions to erase unneeded string characters, find char, find its position		    //
 //==========================================================================================//
 string erase_char (string str, char c){
 	str.erase(remove(str.begin(), str.end(), c), str.end());
@@ -101,7 +101,7 @@ int find_pos(string str, char c){
 
 
 //==============================================================//
-//				Function to parse file content					//
+//Function to parse file content				//
 //==============================================================//
 void fill_struct (ifstream &file, gate gate_i [], pin pin_i [], int n){
 	string str,temp;
@@ -109,8 +109,8 @@ void fill_struct (ifstream &file, gate gate_i [], pin pin_i [], int n){
 	int j = 0;
 	for (int i = 0; i < n; i++){
 		getline(file, str);
-		if (str.find("out") != string::npos){                      			//if there is "out" then it is a gate
-			gate_i[j].gate_name = str.substr(str.find('(')-3, 2);			//get substring from '(' (the name of the gate)
+		if (str.find("out") != string::npos){                      					//if there is "out" then it is a gate
+			gate_i[j].gate_name = str.substr(str.find('(')-3, 2);					//get substring from '(' (the name of the gate)
 			temp = str.substr(str.find("(in")+4 , 2);						//get substring after finding "(in)" (input 1)
 			gate_i[j].input1 = temp;										
 
@@ -144,7 +144,7 @@ void fill_struct (ifstream &file, gate gate_i [], pin pin_i [], int n){
 
 
 //==============================================================//
-//			Functions to print structs / partitions				//
+//Functions to print structs / partitions			//
 //==============================================================//
 void print_pin_struct_info (pin pin_i[], int n){
 	cout << endl;
@@ -171,7 +171,7 @@ void print_partition (gate gate_i[], int n){
 void print_MinCut_partition (map<string,map<int,gate>> &partition, string cut_n){
 	int k = 0;
 	for (auto i = partition[cut_n].begin();
-         i != partition[cut_n].end(); ++i) {
+	i != partition[cut_n].end(); ++i) {
 		cout << "Gate "<< k+1 << " Name: " << partition[cut_n][k].gate_name << endl; 
 		k++;
 	}
@@ -183,7 +183,7 @@ void print_MinCut_partition (map<string,map<int,gate>> &partition, string cut_n)
 
 
 //==============================================================//
-//					Function to fill matrix map					//
+//Function to fill matrix map					//
 //==============================================================//
 void fill_con_matrix(pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 	for (int i = 0; i < p_n; i++){
@@ -214,7 +214,7 @@ void fill_con_matrix(pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 	for (int i = 0; i < g_n; i++){
 		for (int j = 0; j < g_n; j++){
 			if ((i != j) && ((gate_i[i].input2 == gate_i[j].input1) || (gate_i[i].input2 == gate_i[j].input2) || (gate_i[i].input2 == gate_i[j].output))) {			//Compare all gate input 2 to every input and output in the netlist
-				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 1;								//(i != j) >>>> don't compare the gate to itself
+				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 1;					//(i != j) >>>> don't compare the gate to itself
 			}
 			else {
 				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 0;
@@ -225,7 +225,7 @@ void fill_con_matrix(pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 	for (int i = 0; i < g_n; i++){
 		for (int j = 0; j < g_n; j++){
 			if ((i != j) && ((gate_i[i].output == gate_i[j].input1) || (gate_i[i].output == gate_i[j].input2) || (gate_i[i].output == gate_i[j].output))) {			//Compare all gate input 2 to every input and output in the netlist
-				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 1;								//(i != j) >>>> don't compare the gate to itself
+				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 1;					//(i != j) >>>> don't compare the gate to itself
 			}
 			else {
 				connectivity[gate_i[i].gate_name][gate_i[j].gate_name] = connectivity[gate_i[i].gate_name][gate_i[j].gate_name] + 0;
@@ -244,7 +244,7 @@ void fill_con_matrix(pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 
 
 //==============================================================//
-//				Function to print the matrix on screen			//
+//Function to print the matrix on screen			//
 //==============================================================//
 void print_con_matrix (pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 	cout << "\nConnectivity Matrix: " << endl;
@@ -294,11 +294,11 @@ void print_con_matrix (pin pin_i [], gate gate_i[], int n, int p_n, int g_n){
 
 
 //===================================================================================================================//
-//		Function to split the netlist into initial partitions and also resolve odd netlist by adding dummy gate		 //
+//Function to split the netlist into initial partitions and also resolve odd netlist by adding dummy gate     	     //
 //===================================================================================================================//
 void Construct_Initial_Partitions(gate part_A[], gate part_B[], gate gate_i[], int g_n, int oddflag){
 
-	if (oddflag){									//if Odd >> resolve for KL don't operate on odd netlist
+	if (oddflag){							//if Odd >> resolve for KL don't operate on odd netlist
 		gate temp[g_n];
 		for (int i = 0; i < (g_n-1); i++){
 			temp[i] = gate_i[i];
@@ -325,7 +325,7 @@ void Construct_Initial_Partitions(gate part_A[], gate part_B[], gate gate_i[], i
 
 
 //===========================================================================================================//		
-//		Function to calculate the cost of transitioning a gate to the other partition (D = Cut - Uncut)		 //
+//Function to calculate the cost of transitioning a gate to the other partition (D = Cut - Uncut)	     //
 //===========================================================================================================//
 map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 
@@ -334,10 +334,10 @@ map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 	map<string,int> uncut_A;					//Number of uncut nets for each gate in partition A
 	map<string,int> uncut_B;					//Number of uncut nets for each gate in partition B
 	
-	map<string,int> D; 							//Cut cost for each gate (cut - uncut)
+	map<string,int> D; 						//Cut cost for each gate (cut - uncut)
 	int cut_cost = 0;
-	for (int i = 0; i < (g_n/2); i++){					//Calc Cut_A
-		if((part_A[i].fixed==0)){ 						//Don't consider fixed gates
+	for (int i = 0; i < (g_n/2); i++){				//Calc Cut_A
+		if((part_A[i].fixed==0)){ 				//Don't consider fixed gates
 			cut_A[part_A[i].gate_name] = 0;        		//Initialization
 			for (int j = 0; j < (g_n/2); j++){
 				cut_A[part_A[i].gate_name] = connectivity[part_A[i].gate_name][part_B[j].gate_name] + cut_A[part_A[i].gate_name] ;
@@ -347,8 +347,8 @@ map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 		}
 	}
 	
-	for (int i = 0; i < (g_n/2); i++){					//Calc Cut_B
-		if((part_B[i].fixed==0)){ 						//Don't consider fixed gates
+	for (int i = 0; i < (g_n/2); i++){				//Calc Cut_B
+		if((part_B[i].fixed==0)){ 				//Don't consider fixed gates
 			cut_B[part_B[i].gate_name] = 0;        		//Initialization
 			for (int j = 0; j < (g_n/2); j++){
 				cut_B[part_B[i].gate_name] = connectivity[part_B[i].gate_name][part_A[j].gate_name] + cut_B[part_B[i].gate_name];
@@ -358,8 +358,8 @@ map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 		}
 	}
 
-	for (int i = 0; i < (g_n/2); i++){					//Calc Uncut_A
-		if((part_A[i].fixed==0)){ 						//Don't consider fixed gates
+	for (int i = 0; i < (g_n/2); i++){				//Calc Uncut_A
+		if((part_A[i].fixed==0)){ 				//Don't consider fixed gates
 			uncut_A[part_A[i].gate_name] = 0;       	//Initialization
 			for (int j = 0; j < (g_n/2); j++){
 				uncut_A[part_A[i].gate_name] = connectivity[part_A[i].gate_name][part_A[j].gate_name] + uncut_A[part_A[i].gate_name];
@@ -368,8 +368,8 @@ map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 		}
 	}
 
-	for (int i = 0; i < (g_n/2); i++){					//Calc Uncut_B
-		if((part_B[i].fixed==0)){ 						//Don't consider fixed gates
+	for (int i = 0; i < (g_n/2); i++){				//Calc Uncut_B
+		if((part_B[i].fixed==0)){ 				//Don't consider fixed gates
 			uncut_B[part_B[i].gate_name] = 0;       	//Initialization
 			for (int j = 0; j < (g_n/2); j++){
 				uncut_B[part_B[i].gate_name] = connectivity[part_B[i].gate_name][part_B[j].gate_name] + uncut_B[part_B[i].gate_name];
@@ -396,7 +396,7 @@ map<string,int> calc_D (gate part_A[], gate part_B[], int g_n){
 
 
 //====================================================================================//
-//			Function to swap a pair of gates after in each KL iteration		     	  //
+//	Function to swap a pair of gates after in each KL iteration		      //
 //====================================================================================//
 void KL_swap(gate part_A[], gate part_B[], int  highest_gain_pair_indeces[]){
 	gate temp;
@@ -412,7 +412,7 @@ void KL_swap(gate part_A[], gate part_B[], int  highest_gain_pair_indeces[]){
 
 
 //=============================================//
-//		Function to calc delta g and G 		   //
+//	Function to calc delta g and G 	       //
 //=============================================//
 void calc_delta_g (map<string,int> D,  gate part_A[], gate part_B[], int g_n, int &G){
 	map<string,map<string,int>> delta_g;				//2D map for delta_g (swaping pairs)
@@ -437,7 +437,7 @@ void calc_delta_g (map<string,int> D,  gate part_A[], gate part_B[], int g_n, in
 	}
 	//cout << "\nHighest gain is: " << highest_gain << "  --  Pair to switch are: " << part_A[highest_gain_pair_indeces[0]].gate_name << " and " << part_B[highest_gain_pair_indeces[1]].gate_name << endl;
 	KL_swap(part_A, part_B, highest_gain_pair_indeces);				//Swap gates
-	G = G + highest_gain;											//Calculate overall gain G
+	G = G + highest_gain;								//Calculate overall gain G
 	//cout << "G = " << G <<endl;
 }
 
@@ -445,15 +445,15 @@ void calc_delta_g (map<string,int> D,  gate part_A[], gate part_B[], int g_n, in
 
 
 //=====================================================//
-//			Self contained KL_Alg Function			   //
+//	Self contained KL_Alg Function		       //
 //=====================================================//
 void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map<string,map<int,gate>> &partitionB, string cut_n) {
 	cout << "\n||================================= Applying Kernighan-Lin (KL) Algorithm =================================|| " << endl;
-	int G = 0;								//Initialized Cumulative Gain
+	int G = 0;						//Initialized Cumulative Gain
 	float G_m = INFINITY;					//Criterion To Do another Pass (G_m > 0)
-	float G_BEST;							//Cummulative gain in each iteration
-    bool all_fixed = 0;
-	map<string,int> D;						//An assosiative array of D (transition cost)
+	float G_BEST;						//Cummulative gain in each iteration
+	bool all_fixed = 0;
+	map<string,int> D;					//An assosiative array of D (transition cost)
 
 
 
@@ -461,10 +461,10 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 	int oddflag = 0;
 	if ((g_n % 2) != 0){ 					//Test if the netlist is Odd
 		g_n = g_n + 1;							
-		oddflag = 1;						//This flag is used in partitioning function (Construct_Initial_Partitions)
+		oddflag = 1;					//This flag is used in partitioning function (Construct_Initial_Partitions)
 	}
 	gate part_A[g_n/2], part_A_BEST[g_n/2]; //The "best" array is to store the iteration of best gain
-    gate part_B[g_n/2], part_B_BEST[g_n/2];
+	gate part_B[g_n/2], part_B_BEST[g_n/2];
 
 
 	Construct_Initial_Partitions(part_A, part_B, gate_i, g_n, oddflag);
@@ -472,13 +472,13 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 	//Print initial partitions
 	/*cout <<"\nInitial Partitions: \n";
 	cout <<"Partition A: \n";
-    print_partition(part_A, g_n/2);
-    cout <<"\nPartition B: \n";
-    print_partition(part_B, g_n/2);*/
+	print_partition(part_A, g_n/2);
+	cout <<"\nPartition B: \n";
+	print_partition(part_B, g_n/2);*/
 
 
 	//Begin Pass 1
-	int p = 0;											//Pass counter
+	int p = 0;									//Pass counter
 	while (G_m > 0){
 		p++;
 		/*cout << "\n|--------------------- Pass ";
@@ -487,12 +487,12 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 		*/G_BEST = -1 * INFINITY;						//Best Cumulative Gain in an iteration set to negative infinity (will be overwritten by G in each iteration)
 				
 		//Begin Iterations
-		int k = 0; 										//Iteration counter
+		int k = 0; 								//Iteration counter
 		while (!all_fixed){
 			//Printing iteration number and fixed gates
 			/*cout << "\n*********************************************\n" <<"Iteration: " << k <<"\t Unfixed gates:";*/
 			k++;
-			/*for (int n = 0; n < g_n/2; n++)			//Print unfixed gates
+			/*for (int n = 0; n < g_n/2; n++)				//Print unfixed gates
 			{
 				if(part_B[n].fixed==0){
 					cout<< "  " << part_B[n].gate_name;
@@ -504,7 +504,7 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 			cout<< "\n*********************************************\n";*/
 			
 
-			D = calc_D (part_A, part_B, g_n);					//Calc D for all gates 
+			D = calc_D (part_A, part_B, g_n);				//Calc D for all gates 
 			calc_delta_g (D, part_A, part_B, g_n, G);			//Calc highest gain in single iteration
 			
 			//Storing the iteration of BEST gain
@@ -515,22 +515,22 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 					part_B_BEST[i] = part_B[i];
 				}   
 			}
-			all_fixed = (k == (g_n/2)); 						//If all fixed (Total num of iteration is half the gate count) --> exit the loop 
+			all_fixed = (k == (g_n/2)); 					//If all fixed (Total num of iteration is half the gate count) --> exit the loop 
 		}	
 		//End of a pass
 
-		for(int i=0; i < (g_n/2); i++) {						//Update partitions for next pass
+		for(int i=0; i < (g_n/2); i++) {					//Update partitions for next pass
 			part_A[i] = part_A_BEST[i];
 			part_B[i] = part_B_BEST[i];
 		}
-		for (int i = 0; i < g_n/2; i++){						//Unfix all gates
+		for (int i = 0; i < g_n/2; i++){					//Unfix all gates
 			part_B[i].fixed = 0;
 			part_A[i].fixed = 0;
 		}
 		all_fixed = 0;
 		G_m = G_BEST;
 
-		/*cout << "|------------------ End of Pass ";			//To print config after each pass
+		/*cout << "|------------------ End of Pass ";				//To print config after each pass
 		cout << p;
 		cout << " ------------------| " << endl; 
 
@@ -549,25 +549,25 @@ void Apply_KL(gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map
 	}
 
 	//Printing output after finishing KL
-    cout <<"\n\n-> Best configuration after ";
-	cout << p << " Pass(es):\n---------------------------------------\n";
-    cout <<"Partition A ["<< cut_n << "]: \n";
-    print_MinCut_partition(partitionA, cut_n);
-    cout <<"\nPartition B ["<< cut_n << "]: \n";
-    print_MinCut_partition(partitionB, cut_n);
+	cout <<"\n\n-> Best configuration after ";
+		cout << p << " Pass(es):\n---------------------------------------\n";
+	cout <<"Partition A ["<< cut_n << "]: \n";
+	print_MinCut_partition(partitionA, cut_n);
+	cout <<"\nPartition B ["<< cut_n << "]: \n";
+	print_MinCut_partition(partitionB, cut_n);
 }
 
 
 
 
 //===============================================================//
-//		A Function to swap gates in placement refinement		 //
+//	A Function to swap gates in placement refinement	 //
 //===============================================================//
 void swap_gates(map<string,map<int,gate>> &partitionA, map<string,map<int,gate>> &partitionB, string cut_n){
 	int k = 0;
 	gate temp;
 	for (auto i = partitionA[cut_n].begin();
-         i != partitionA[cut_n].end(); ++i) {
+	i != partitionA[cut_n].end(); ++i) {
 		temp = partitionA[cut_n][k];
 		partitionA[cut_n][k] = partitionB[cut_n][k];
 		partitionB[cut_n][k] = temp;
@@ -580,7 +580,7 @@ void swap_gates(map<string,map<int,gate>> &partitionA, map<string,map<int,gate>>
 
 
 //================================================================//
-//  	A Function to print the placement of any 2x4 grid		  //
+//  	A Function to print the placement of any 2x4 grid	  //
 //================================================================//
 void print_placement(map<string,map<int,gate>> &partitionA, map<string,map<int,gate>> &partitionB, string cut_n[]){
 	int k = 0;
@@ -605,7 +605,7 @@ void print_placement(map<string,map<int,gate>> &partitionA, map<string,map<int,g
 
 
 //================================================================//
-//  	Apply Generic Min_Cut Placement for maximum 14 cuts		  //
+//  	Apply Generic Min_Cut Placement for maximum 14 cuts	  //
 //================================================================//
 void MinCutP_Alg (gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA, map<string,map<int,gate>> &partitionB, string cut_n[]){
 	int k = 0;
@@ -634,7 +634,7 @@ void MinCutP_Alg (gate gate_i[], int g_n, map<string,map<int,gate>> &partitionA,
 
 
 //========================================================================//
-//  	Apply Refinement to the total wire length for 2x4 grid only		  //
+//  	Apply Refinement to the total wire length for 2x4 grid only       //
 //========================================================================//
 void placement_refine (map<string,map<int,gate>> &partitionA, map<string,map<int,gate>> &partitionB, string cut_n[]){
 		int highest_con = 0;
@@ -642,10 +642,10 @@ void placement_refine (map<string,map<int,gate>> &partitionA, map<string,map<int
 		{										//So that we can do just horizontal swaps to achieve lower wire length
 		if (
 			(connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionA[cut_n[5+i]][0].gate_name] + 			//If (gateA) in 3a or 3b connectivty to gateA in 3c or 3d
-			 connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name]) 			//plus (gateA) in 3a or 3b connectivty to gateB in 3c or 3d
+			connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name]) 			//plus (gateA) in 3a or 3b connectivty to gateB in 3c or 3d
 			> 																									//is higher than the connectivity of (gateB) in 3a or 3b 
 			(connectivity[partitionB[cut_n[3+i]][0].gate_name][partitionA[cut_n[5+i]][0].gate_name] + 			//connected to gateA/B in 3c or 3d
-			 connectivity[partitionB[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name])
+			connectivity[partitionB[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name])
 		)
 		{																									 	//Swap between GateA and B in 3a or 3b
 			highest_con = connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionA[cut_n[5+i]][0].gate_name] + connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name];
@@ -660,10 +660,10 @@ void placement_refine (map<string,map<int,gate>> &partitionA, map<string,map<int
 
 		if (
 			(connectivity[partitionA[cut_n[5+i]][0].gate_name][partitionA[cut_n[3+i]][0].gate_name] + 
-		     connectivity[partitionA[cut_n[5+i]][0].gate_name][partitionB[cut_n[3+i]][0].gate_name]) 
+			connectivity[partitionA[cut_n[5+i]][0].gate_name][partitionB[cut_n[3+i]][0].gate_name]) 
 			> 
 			(connectivity[partitionB[cut_n[5+i]][0].gate_name][partitionA[cut_n[3+i]][0].gate_name] + 
-			 connectivity[partitionB[cut_n[5+i]][0].gate_name][partitionB[cut_n[3+i]][0].gate_name])
+			connectivity[partitionB[cut_n[5+i]][0].gate_name][partitionB[cut_n[3+i]][0].gate_name])
 		)
 		{
 			highest_con = connectivity[partitionA[cut_n[5+i]][0].gate_name][partitionA[cut_n[3+i]][0].gate_name] + connectivity[partitionA[cut_n[3+i]][0].gate_name][partitionB[cut_n[5+i]][0].gate_name];
