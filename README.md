@@ -1,6 +1,7 @@
 # EDA_Class_Project
 This repo includes the final class project of "Physical Design and EDA Algorithms" course at Zewail City 2022
 Text Book: VLSI Physical Design: From Graph Partitioning to Timing Closure >> [Link](https://link.springer.com/book/10.1007/978-90-481-9591-6)
+Applying the Kernighan-Lin (KL) algorithm, Minimum-Cut Placement algorithm & Minimum-area Floorplan (shape function) algorithm
 ***************************************************************************
 Files Organization:
 - docs: Project Description and Report
