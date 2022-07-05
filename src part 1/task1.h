@@ -1,6 +1,6 @@
 //====================================================//
 //       Credits: John Saber & Abdullah Allam         //
-//        	    KL Algorithm     		      //
+//  Min Floorplan Area Algorithm (Shape function)     //
 //====================================================//
 
 #ifndef NETLIST_MATRIX_H
